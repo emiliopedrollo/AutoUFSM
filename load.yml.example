@@ -1,0 +1,47 @@
+- # User 1
+  Access Token: user_1_accesss_token
+  Device Id: user_1_device_id
+  Agendamentos:
+    Seg:
+      Almoço:
+        Restaurante: RU - Campus II
+    Ter:
+      Almoço:
+        Restaurante: RU - Campus II
+    Qua:
+    Qui:
+      Almoço:
+        Restaurante: RU - Campus II
+    Sex:
+      Almoço:
+        Restaurante: RU - Campus II
+  Renovações: true
+- # User 2
+  Access Token: user_2_accesss_token
+  Device Id: user_2_device_id
+  Agendamentos:
+    Seg:
+      Café:
+        Restaurante: RU - Campus I
+      Almoço:
+        Restaurante: RU - Campus I
+    Ter:
+      Café:
+        Restaurante: RU - Campus I
+      Almoço:
+        Restaurante: RU - Campus I
+    Qua:
+      Café:
+        Restaurante: RU - Campus I
+      Almoço:
+        Restaurante: RU - Campus I
+    Qui:
+      Café:
+        Restaurante: RU - Campus I
+      Almoço:
+        Restaurante: RU - Campus I
+    Sex:
+      Café:
+        Restaurante: RU - Campus I
+      Almoço:
+        Restaurante: RU - Campus I

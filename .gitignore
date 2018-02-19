@@ -1,4 +1,6 @@
 vendor/
 .idea/
+composer.phar
 .git/
-/composer.phar
+load.yml
+composer

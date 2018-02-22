@@ -31,13 +31,15 @@
       "name": "AutoUFSM.phar",
       "output-dir": "bin/",
       "entry-point": "src/application.php",
+      "skip-shebang": false,
       "include": [
         "src"
       ],
       "include-dev": false,
       "events": {
-        "build.before": [],
-        "build.after": []
+        "command.package.end": [
+          "chmod +x bin/AutoUFSM.phar"
+        ]
       }
     }
   }

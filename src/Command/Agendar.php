@@ -56,7 +56,7 @@ class Agendar extends Command {
 
                     if (isset($user['Agendamentos'][$dia])){
                         $refeicoes = new Collection($user['Agendamentos'][$dia]);
-                        $refeicoes->each(function($refeicao_dados,$refeicao_text) use ($data_processavel, $user, $client, $restaurantes, $tipos_refeicao, $errOutput) {
+                        $refeicoes->each(function($refeicao_dados,$refeicao_text) use ($data_processavel, $user, $client, $restaurantes, $tipos_refeicao, $output, $errOutput) {
 
                             $refeicao = $tipos_refeicao->where('descricao','=',$refeicao_text)->first();
 
@@ -86,10 +86,16 @@ class Agendar extends Command {
                             $response_json = json_decode((string)$response->getBody())[0];
 
                             if ($response_json->error || !$response_json->sucesso) {
-                                $errOutput->writeln(sprintf("Não foi possível agendar %s para %s: %s",
+                                $errOutput->writeln(sprintf("Não foi possível agendar %s para %s em %s: %s",
                                     $response_json->tipoRefeicao,
                                     Carbon::parse($response_json->dataRefAgendada)->formatLocalized("%x"),
+                                    $restaurante_text,
                                     $response_json->impedimento));
+                            } else {
+                                $output->writeln(sprintf("%s gendado com sucesso para o dia %s em %s",
+                                    $response_json->tipoRefeicao,
+                                    Carbon::parse($response_json->dataRefAgendada)->formatLocalized("%x"),
+                                    $restaurante_text));
                             }
 
                         });

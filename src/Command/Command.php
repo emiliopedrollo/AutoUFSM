@@ -26,7 +26,8 @@ class Command extends BaseCommand
         return [
             'X-UFSM-Access-Token' => $user['Access Token'],
             'X-UFSM-Device-ID' => $user['Device Id'],
-            'Content-Type' => 'application/x-www-form-urlencoded',
+//            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Content-Type' => 'application/json',
             'Accept-Encoding' => 'gzip',
             'User-Agent' => 'okhttp/3.9.0'
         ];

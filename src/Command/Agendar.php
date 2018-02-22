@@ -5,6 +5,7 @@ namespace AutoUFSM\Command;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Illuminate\Support\Collection;
 
@@ -15,13 +16,17 @@ class Agendar extends Command {
         parent::configure();
         $this
             ->setName("agendar")
-            ->setDescription("Realiza agendamentos");
+            ->setDescription("Realiza agendamentos")
+            ->addOption("offset","o",InputOption::VALUE_OPTIONAL,
+                "Number of days to skip while making schedules",2);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         parent::execute($input,$output);
 
         $agora = Carbon::now();
+
+        $offset = $input->getOption('offset');
 
         $client = new Client();
 
@@ -39,7 +44,7 @@ class Agendar extends Command {
                 $tipos_refeicao = new Collection($form->tiposRefeicao);
 
                 $data_maxima = (clone $agora)->addDays($form->quantidadeMaximaDias)->endOfDay();
-                $data_processavel = (clone $agora)->startOfDay();
+                $data_processavel = (clone $agora)->addDays($offset)->startOfDay();
 
                 while($data_processavel->lessThanOrEqualTo($data_maxima)) {
 

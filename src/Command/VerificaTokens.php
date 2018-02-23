@@ -40,12 +40,8 @@ class VerificaTokens extends Command
 
             $response_json = json_decode((string)$response->getBody());
 
-            $output->writeln(sprintf("Usuário %d: %s",
-                $user_index++,
-                ($response_json->error) ?
-                    $response_json->mensagem :
-                    $response_json->nome
-                ));
+            $output->writeln(sprintf("Usuário %d (%s): %s",
+                $user_index++, $user["User"],$response_json->mensagem));
 
         }
 

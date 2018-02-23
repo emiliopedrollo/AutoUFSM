@@ -1,6 +1,7 @@
 - # User 1
   Access Token: user_1_accesss_token
   Device Id: user_1_device_id
+  User: Nome do Usuário 1
   Agendamentos:
     Seg:
       Almoço:
@@ -19,6 +20,7 @@
 - # User 2
   Access Token: user_2_accesss_token
   Device Id: user_2_device_id
+  User: Nome do Usuário 2
   Agendamentos:
     Seg:
       Café:

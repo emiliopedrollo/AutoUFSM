@@ -19,7 +19,9 @@ class Agendar extends Command {
             ->setName("agendar")
             ->setDescription("Realiza agendamentos")
             ->addOption("offset","o",InputOption::VALUE_OPTIONAL,
-                "Numero de dias para pular no inicio do agendamento",2);
+                "Numero de dias para pular no inicio do agendamento",1)
+            ->addOption("limit","i",InputOption::VALUE_OPTIONAL,
+                "Numero de dias máximo no futuro para executar agendamento",5);
     }
 
 
@@ -48,12 +50,16 @@ class Agendar extends Command {
                 $restaurantes = new Collection($form->restaurantes);
                 $tipos_refeicao = new Collection($form->tiposRefeicao);
 
-                $data_maxima = (clone $agora)->addDays($form->quantidadeMaximaDias)->endOfDay();
+                $max_due = min($form->quantidadeMaximaDias-1,$input->getOption('limit'));
+
+                $data_maxima = (clone $agora)->addDays($max_due)->endOfDay();
                 $data_processavel = (clone $agora)->addDays($offset)->startOfDay();
 
                 while($data_processavel->lessThanOrEqualTo($data_maxima)) {
 
                     $dia = $data_processavel->formatLocalized("%a");
+
+                    $output->writeln($dia);
 
                     if (isset($user['Agendamentos'][$dia])){
                         $refeicoes = new Collection($user['Agendamentos'][$dia]);

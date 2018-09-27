@@ -6,6 +6,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use AutoUFSM\Command\Agendar;
 use AutoUFSM\Command\GetToken;
+use AutoUFSM\Command\ShowLoads;
 use AutoUFSM\Command\VerificaTokens;
 use Symfony\Component\Console\Application;
 
@@ -16,6 +17,7 @@ $application = new Application;
 $application->add(new Agendar);
 $application->add(new GetToken);
 $application->add(new VerificaTokens);
+$application->add(new ShowLoads);
 
 try {
     $application->run();

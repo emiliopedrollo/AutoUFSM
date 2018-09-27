@@ -3,6 +3,9 @@
   "description": "Projeto para automatizar ações no portal da UFSM",
   "type": "project",
   "require": {
+    "php": "^7.1",
+    "ext-posix": "*",
+    "ext-json": "*",
     "guzzlehttp/guzzle": "^6.3",
     "symfony/yaml": "^3.4",
     "symfony/console": "^3.4",

@@ -4,6 +4,7 @@ namespace AutoUFSM\Command;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -39,12 +40,20 @@ class Agendar extends Command {
         foreach ($this->load as $user) {
             if (isset($user['Agendamentos'])) {
 
-                $request = $client
-                    ->request('post', 'https://portal.ufsm.br/mobile/webservice/ru/agendamentoForm',
-                    [
-                        'headers' => $this->getAPIHeaders($user)
-                    ]
-                );
+                try {
+                    $request = $client
+                        ->request('post', 'https://portal.ufsm.br/mobile/webservice/ru/agendamentoForm',
+                            [
+                                'headers' => $this->getAPIHeaders($user)
+                            ]
+                        );
+                } catch (GuzzleException $e) {
+                    $errOutput->writeln(sprintf("(%s) Não foi possível recuperar formulário de agendamento: %s",
+                        $user["User"],
+                        $e->getMessage()
+                    ));
+                    continue;
+                }
 
                 $form = json_decode((string)$request->getBody());
                 $restaurantes = new Collection($form->restaurantes);
@@ -123,7 +132,7 @@ class Agendar extends Command {
             }
         }
 
-
+        return 0;
     }
 
 

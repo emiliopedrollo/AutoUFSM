@@ -4,6 +4,7 @@ namespace AutoUFSM\Command;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -22,7 +23,7 @@ class GetToken extends \Symfony\Component\Console\Command\Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int|null
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -44,22 +45,27 @@ class GetToken extends \Symfony\Component\Console\Command\Command
 
         $client = new Client();
 
-        $response = $client->request("POST","https://portal.ufsm.br/mobile/webservice/generateToken",[
-            "headers" => [
-                "Content-Type" => "application/json; charset=utf-8",
-                "Connection" => "Keep-Alive",
-                "Accept-Encoding" => "gzip",
-                "User-Agent" => "okhttp/3.9.0"
-            ],
-            "json" => [
-                "appName" => "UFSMDigital",
-                "deviceId" => $device_id,
-                "deviceInfo" => "motorola XT1097 android: 6.0",
-                "login" => $matricula,
-                "senha" => $senha
-            ]
+        try {
+            $response = $client->request("POST", "https://portal.ufsm.br/mobile/webservice/generateToken", [
+                "headers" => [
+                    "Content-Type" => "application/json; charset=utf-8",
+                    "Connection" => "Keep-Alive",
+                    "Accept-Encoding" => "gzip",
+                    "User-Agent" => "okhttp/3.9.0"
+                ],
+                "json" => [
+                    "appName" => "UFSMDigital",
+                    "deviceId" => $device_id,
+                    "deviceInfo" => "motorola XT1097 android: 6.0",
+                    "login" => $matricula,
+                    "senha" => $senha
+                ]
 
-        ]);
+            ]);
+        } catch (GuzzleException $e) {
+            $errOutput->writeln(sprintf("Não foi possível recuperar token: %s",$e->getMessage()));
+            return 1;
+        }
 
         $response_json = json_decode((string)$response->getBody());
 
@@ -70,7 +76,7 @@ class GetToken extends \Symfony\Component\Console\Command\Command
             $output->writeln(sprintf("Device Id: %s",$device_id));
         }
 
-
+        return 0;
     }
 
 

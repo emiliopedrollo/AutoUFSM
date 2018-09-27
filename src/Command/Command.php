@@ -46,10 +46,37 @@ class Command extends BaseCommand
 
     }
 
+    /**
+     * @param OutputInterface $output
+     * @throws \ErrorException|ParseException
+     */
     protected function loadYaml(OutputInterface $output)
     {
         try {
-            $this->load = Yaml::parseFile($this->getRealPath($this->load_filename));
+            $load_path = $this->getRealPath($this->load_filename);
+            if (is_dir($load_path)) {
+                $load_path = rtrim($load_path,DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                if ($handle = opendir($load_path)) {
+                    $this->load = [];
+                    while (false !== ($file = readdir($handle))) {
+
+                        if ((filetype($load_path . $file) != 'file') OR
+                            (pathinfo($load_path . $file)['extension'] != 'yml'))
+                        {
+                            continue;
+                        }
+
+                        $this->load[] = Yaml::parseFile($load_path . $file);
+
+                    }
+                    closedir($handle);
+                } else {
+                    $output->writeln("Could not pen load folder ($this->load_filename), aborting.");
+                    throw new \ErrorException;
+                }
+            } else {
+                $this->load = Yaml::parseFile($load_path);
+            }
         } catch (ParseException $e) {
             $output->writeln("Could not parse load file ($this->load_filename), aborting: " .
                 $e->getMessage());
@@ -83,6 +110,12 @@ class Command extends BaseCommand
         }
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws \ErrorException|ParseException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->loadYaml($output);

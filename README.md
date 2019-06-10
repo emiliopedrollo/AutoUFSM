@@ -21,7 +21,7 @@ AutoUFSM
 3. Finally, build the AutoUFSM phar:
 
    ```
-   vendor/bin/phar-builder package composer.json
+   php -d phar.readonly=0 vendor/bin/phar-builder package composer.json
    ```
    
    After that the standalone executable will be generated at _\<Project Root\>/bin/AutoUFSM.phar_.

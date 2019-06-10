@@ -2,6 +2,9 @@
 
 namespace AutoUFSM\Command;
 
+use Carbon\Carbon;
+use ErrorException;
+use Phar;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +51,7 @@ class Command extends BaseCommand
 
     /**
      * @param OutputInterface $output
-     * @throws \ErrorException|ParseException
+     * @throws ErrorException|ParseException
      */
     protected function loadYaml(OutputInterface $output)
     {
@@ -72,7 +75,7 @@ class Command extends BaseCommand
                     closedir($handle);
                 } else {
                     $output->writeln("Could not pen load folder ($this->load_filename), aborting.");
-                    throw new \ErrorException;
+                    throw new ErrorException;
                 }
             } else {
                 $this->load = Yaml::parseFile($load_path);
@@ -88,7 +91,7 @@ class Command extends BaseCommand
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
 
-        $file = $this->getRealPath($input->getOption('load')) ?: ((\Phar::running()) ?
+        $file = $this->getRealPath($input->getOption('load')) ?: ((Phar::running()) ?
             getcwd() . "/load.yml" : __DIR__ . "/../../load.yml");
 
         if (file_exists($file)) {
@@ -110,11 +113,18 @@ class Command extends BaseCommand
         }
     }
 
+    protected function log(OutputInterface $output, string $text) {
+        $output->writeln(sprintf("[%s] %s",
+            Carbon::now()->toDateTimeString(),
+            $text
+        ));
+    }
+
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
-     * @throws \ErrorException|ParseException
+     * @throws ErrorException|ParseException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

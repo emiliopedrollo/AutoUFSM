@@ -48,7 +48,8 @@ class Agendar extends Command {
                             ]
                         );
                 } catch (GuzzleException $e) {
-                    $errOutput->writeln(sprintf("(%s) Não foi possível recuperar formulário de agendamento: %s",
+                    $this->log($errOutput,
+                        sprintf("(%s) Não foi possível recuperar formulário de agendamento: %s",
                         $user["User"],
                         $e->getMessage()
                     ));
@@ -66,9 +67,13 @@ class Agendar extends Command {
 
                 while($data_processavel->lessThanOrEqualTo($data_maxima)) {
 
-                    $dia = $data_processavel->formatLocalized("%a");
+                    $dia = ucfirst(strtolower($data_processavel->formatLocalized("%a")));
 
-                    $output->writeln($dia);
+                    $this->log($output,sprintf(
+                        "(%s) Agendando para %s",
+                        $user['User'],
+                        $data_processavel->formatLocalized("%A, %d de %B de %Y")
+                    ));
 
                     if (isset($user['Agendamentos'][$dia])){
                         $refeicoes = new Collection($user['Agendamentos'][$dia]);
@@ -106,7 +111,7 @@ class Agendar extends Command {
                             $response_json = json_decode((string)$response->getBody())[0];
 
                             if ($response_json->error || !$response_json->sucesso) {
-                                $errOutput->writeln(
+                                $this->log($errOutput,
                                     sprintf("(%s) Não foi possível agendar %s para %s em %s: %s",
                                         $user["User"],
                                         $response_json->tipoRefeicao,
@@ -115,7 +120,7 @@ class Agendar extends Command {
                                         $response_json->impedimento)
                                 );
                             } else {
-                                $output->writeln(
+                                $this->log($output,
                                     sprintf("(%s) %s agendado com sucesso para o dia %s em %s",
                                         $user["User"],
                                         $response_json->tipoRefeicao,
